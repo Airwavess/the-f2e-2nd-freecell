@@ -1,0 +1,11 @@
+$basic-color: #ffac4e;
+
+.blank-draggable {
+  height: 204px;
+
+  &.blank-draggable--hint {
+    box-shadow: 0px 0px 20px $basic-color;
+    border-radius: 12px;
+    border: 3px solid  $basic-color;
+  }
+}

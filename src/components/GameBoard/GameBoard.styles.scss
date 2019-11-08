@@ -1,0 +1,14 @@
+$basic-color: #ffac4e;
+
+.game-board {
+  color: #fff;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  .game-board__top-nav {
+    margin-top: 24px;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+  }
+}

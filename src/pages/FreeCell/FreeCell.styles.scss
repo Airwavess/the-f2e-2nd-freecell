@@ -1,0 +1,109 @@
+$backgroun-color: #0a141d;
+$basic-color: #ffac4e;
+$logo-color: #ffac4e;
+
+@mixin button {
+  background-color: transparent;
+  border: 3px solid $basic-color;
+  border-radius: 16px;
+  width: 96px;
+  height: 96px;
+  cursor: pointer;
+  &:focus {
+    outline: none;
+  }
+}
+
+.free-cell {
+  height: 100%;
+  background-color: $backgroun-color;
+  display: flex;
+  flex-direction: column;
+  .free-cell__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+
+    .free-cell__logo {
+      font-family: 'Oleo Script', cursive;
+      font-size: 24px;
+      color: $logo-color;
+      margin-left: 48px;
+    }
+    .free-cell__menu {
+      @include button;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+
+      span {
+        height: 2px;
+        width: 36px;
+        background-color: $basic-color;
+        position: absolute;
+        transition: margin 0.5s, transform 2s, background-color 0.5s;
+
+        &:after,
+        &:before {
+          content: '';
+          height: 2px;
+          width: 36px;
+          background-color: $basic-color;
+          position: absolute;
+          transition: margin 0.5s, transform 2s, background-color 0.5s;
+        }
+
+        &:after {
+          margin-top: 12px;
+        }
+
+        &::before {
+          margin-top: -12px;
+        }
+      }
+    }
+    .free-cell__menu--active {
+      border-color: transparent;
+      span {
+        background: transparent;
+
+        &:before {
+          margin: 0;
+          transform: rotate(-315deg);
+        }
+
+        &:after {
+          margin: 0;
+          transform: rotate(315deg);
+        }
+      }
+    }
+  }
+
+  .free-cell__game-board {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+  }
+
+  .free-cell__hint {
+    z-index: 99999;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    button {
+      @include button;
+    }
+  }
+
+  .free-cell__back {
+    z-index: 99999;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    button {
+      @include button;
+    }
+  }
+}

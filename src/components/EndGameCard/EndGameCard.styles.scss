@@ -1,0 +1,95 @@
+$backgroun-color: #0a141d;
+$basic-color: #ffac4e;
+
+.end-game {
+  font-family: 'Oleo Script', cursive;
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  align-items: flex-end;
+  .end-game__content {
+    width: 688px;
+    height: 500px;
+    border-top: 3px solid $basic-color;
+    border-left: 3px solid $basic-color;
+    border-right: 3px solid $basic-color;
+    border-top-right-radius: 48px;
+    border-top-left-radius: 48px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .end-game__info {
+      .end-game__game-points {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        h1 {
+          font-size: 100px;
+          text-align: center;
+          margin: 0;
+          padding: 0 96px;
+        }
+        img {
+          width: 24px;
+          height: 36px;
+        }
+        &:before,
+        &:after {
+          content: '';
+          width: 146px;
+          height: 1px;
+          background-color: $basic-color;
+        }
+      }
+      .end-game__game-time {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        h4 {
+          font-size: 50px;
+          text-align: center;
+          margin: 0 12px;
+        }
+
+        img {
+          width: 36px;
+          height: 36px;
+        }
+      }
+    }
+
+    .end-game__btn {
+      margin: 12px auto;
+      padding: 12px 24px;
+      border: 2px solid $basic-color;
+      border-radius: 16px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: 0.5s;
+      &:hover {
+        transform: scale(1.1);
+      }
+      span {
+        font-family: 'Oleo Script', cursive;
+        font-size: 48px;
+        color: $basic-color;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 24px;
+      }
+      .end-game__btn-icon {
+        width: 48px;
+        height: 48px;
+        background-size: contain;
+        background-repeat: no-repeat;
+        background-position: center;
+      }
+    }
+  }
+}

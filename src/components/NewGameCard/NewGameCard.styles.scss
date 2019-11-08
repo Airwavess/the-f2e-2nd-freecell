@@ -1,0 +1,33 @@
+$basic-color: #ffac4e;
+
+.new-game-btn {
+  margin: 12px auto;
+  padding: 12px 24px;
+  border: 2px solid $basic-color;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: 0.5s;
+  &:hover {
+    transform: scale(1.1);
+  }
+  span {
+    font-family: 'Oleo Script', cursive;
+    font-size: 48px;
+    color: $basic-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-right: 24px;
+  }
+  .new-game-btn__icon {
+    width: 48px;
+    height: 48px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+  }
+}

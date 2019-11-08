@@ -1,0 +1,19 @@
+$font-color: #fff;
+
+.header {
+  height: 100px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  font-family: 'Oleo Script', cursive;
+  font-size: 24px;
+  color: $font-color;
+  .header__points {
+    margin-right: 24px;
+  }
+
+  .header__time {
+    margin-left: 24px;
+    min-width: 120px;
+  }
+}

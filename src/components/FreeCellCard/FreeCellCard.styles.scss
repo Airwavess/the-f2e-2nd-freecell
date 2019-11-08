@@ -1,0 +1,35 @@
+$basic-color: #ffac4e;
+
+.free-cell-card {
+  width: 132px;
+  height: 204px;
+  border: 3px solid $basic-color;
+  border-radius: 12px;
+  position: relative;
+  margin: 0 24px;
+  &:after {
+    content: '';
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 112px;
+    height: 184px;
+    border: 1px solid $basic-color;
+    border-radius: 8px;
+    box-sizing: border-box;
+  }
+
+  .free-cell-card__card {
+    position: absolute;
+    width: 132px;
+    height: 204px;
+    z-index: 5555;
+    background-size: contain;
+    cursor: pointer;
+  }
+
+  &.free-cell-card--hint {
+    box-shadow: 0px 0px 20px $basic-color;
+    border-radius: 12px;
+  }
+}
