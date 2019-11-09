@@ -63,11 +63,19 @@ export function shuffle(array) {
   return array
 }
 
-/**
- * 隨機產生52張不重複的卡片
- */
-export function generateRandomCards() {
-  const points = [
+// RNG
+function FreeCellRNG(seed) {
+  return {
+    lastNum: seed,
+    next() {
+      this.lastNum = (214013 * this.lastNum + 2531011) % Math.pow(2, 31)
+      return this.lastNum >> 16
+    }
+  }
+}
+// Get cards
+function getDeck() {
+  const ranks = [
     'A',
     '2',
     '3',
@@ -82,23 +90,53 @@ export function generateRandomCards() {
     'Q',
     'K'
   ]
-  const suits = ['Clubs', 'Spades', 'Hearts', 'Diamonds']
+  const suits = ['Clubs', 'Diamonds', 'Hearts', 'Spades']
+  const cards = []
+  for (let i = 0; i < ranks.length; i += 1) {
+    for (let j = 0; j < suits.length; j += 1) {
+      cards.push(`${ranks[i]}_${suits[j]}`)
+    }
+  }
+  return cards
+}
 
-  let cards = []
-  points.forEach(point => {
-    suits.forEach(suit => {
-      cards.push(`${point}_${suit}`)
-    })
-  })
-  cards = shuffle(cards)
+/**
+ * 隨機產生52張不重複的卡片
+ */
+export function generateRandomCards() {
+  const seed = Math.floor(Math.random() * 1000000) + 1
+  const rng = FreeCellRNG(seed)
+  const deck = getDeck()
 
-  const freecellList = []
-  const numberOfCardOfEachColumn = [7, 7, 7, 7, 6, 6, 6, 6]
-  numberOfCardOfEachColumn.forEach(number => {
-    freecellList.push(cards.splice(0, number))
-  })
+  const deltCards = [[], [], [], [], [], [], [], []]
+  let currentColumn = 0
+  let currentRow = 0
 
-  return freecellList
+  let rand
+  let temp
+  let card
+  while (deck.length > 0) {
+    // Choose a random card
+    rand = rng.next() % deck.length
+
+    // Swap this random card with the last card in the array
+    temp = deck[deck.length - 1]
+    deck[deck.length - 1] = deck[rand]
+    deck[rand] = temp
+
+    // Remove this card from the array
+    card = deck.pop()
+
+    // Deal this card
+    deltCards[currentRow].push(card)
+    currentColumn += 1
+    if (currentColumn === 7 || (currentRow > 3 && currentColumn === 6)) {
+      currentColumn = 0
+      currentRow += 1
+    }
+  }
+
+  return deltCards
 }
 
 export function getImageObj(card) {
