@@ -51,6 +51,10 @@ import Spade_J from '../assets/img/cards/J_Spades.svg'
 import Spade_Q from '../assets/img/cards/Q_Spades.svg'
 import Spade_K from '../assets/img/cards/K_Spades.svg'
 
+/**
+ * 亂數重新排列`array`
+ * @param {Array} array
+ */
 export function shuffle(array) {
   for (let i = array.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1))
@@ -59,6 +63,9 @@ export function shuffle(array) {
   return array
 }
 
+/**
+ * 隨機產生52張不重複的卡片
+ */
 export function generateRandomCards() {
   const points = [
     'A',
@@ -86,7 +93,7 @@ export function generateRandomCards() {
   cards = shuffle(cards)
 
   const freecellList = []
-  const numberOfCardOfEachColumn = shuffle([7, 7, 7, 7, 6, 6, 6, 6])
+  const numberOfCardOfEachColumn = [7, 7, 7, 7, 6, 6, 6, 6]
   numberOfCardOfEachColumn.forEach(number => {
     freecellList.push(cards.splice(0, number))
   })
@@ -202,6 +209,11 @@ export function getImageObj(card) {
   }
 }
 
+/**
+ * 判斷 `suitA` 與 `suitB` 是否為相反顏色的花色
+ * @param {String} suitA
+ * @param {String} suitB
+ */
 export function isDifferentColorSuit(suitA, suitB) {
   if (
     (suitA === 'Diamonds' || suitA === 'Hearts') &&
@@ -261,9 +273,11 @@ export function substractEqualToOne(pointA, pointB) {
  * @param {*} card
  */
 export function isDroppable(isDraggedCard, card) {
-  const [isDraggedCardPoint, isDraggedCardSuit] = isDraggedCard.split('_')
-  const [cardPoint, cardSuit] = card.split('_')
-  // console.log(isDraggedCard, card, isDifferentColorSuit(isDraggedCardSuit, cardSuit), substractEqualToOne(cardPoint, isDraggedCardPoint))
+  if (isDraggedCard.columnIndex === card.columnIndex) return false
+
+  const [isDraggedCardPoint, isDraggedCardSuit] = isDraggedCard.card.split('_')
+  const [cardPoint, cardSuit] = card.card.split('_')
+
   if (isDraggedCardSuit !== cardSuit && isDraggedCardPoint !== cardPoint) {
     if (
       isDifferentColorSuit(isDraggedCardSuit, cardSuit) &&
@@ -313,7 +327,37 @@ export function getTime(totalSeconds) {
   return `${minutes}:${seconds}`
 }
 
-export function isDraggable(tableauColumn, index) {
+/**
+ * 計算空白的排堆共有幾堆
+ * @param {Array} cards
+ */
+function numOfEmptyCards(cards) {
+  let count = 0
+  cards.forEach(card => {
+    if (card === null || card.length === 0) {
+      count += 1
+    }
+  })
+  return count
+}
+
+/**
+ * 判斷在`tableauCards`中的第`columnIndex`行，第`index`張卡片是否可以拖曳。如果
+ * `freeCellCards`的空排堆+tableauCards`的空排堆+1小於被拖曳的卡片數量，則不可以拖曳。
+ * 且拖曳的卡片必須符合規則。
+ * @param {Array} tableauCards
+ * @param {Array} freeCellCards
+ * @param {Number} columnIndex
+ * @param {Number} index
+ */
+export function isDraggable(tableauCards, freeCellCards, columnIndex, index) {
+  const tableauColumn = tableauCards[columnIndex]
+  const numOfDraggableCard =
+    numOfEmptyCards(tableauCards) + numOfEmptyCards(freeCellCards) + 1
+  const numOfDraggingCards = tableauColumn.length - index
+
+  if (numOfDraggingCards > numOfDraggableCard) return false
+
   const newTableauColumn = [...tableauColumn]
   const cards = newTableauColumn
     .splice(index, tableauColumn.length - index)

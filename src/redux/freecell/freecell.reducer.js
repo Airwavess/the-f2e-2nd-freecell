@@ -14,14 +14,9 @@ const INIT_RAMDOM_CARDS = generateRandomCards()
 const INITIAL_STATE = {
   initTableauCards: INIT_RAMDOM_CARDS.map(inner => inner.slice()),
   tableauCards: INIT_RAMDOM_CARDS.map(inner => inner.slice()),
-  // tableauCards: [['A_Diamonds'], ['3_Diamonds', '2_Spades'], [], ['4_Spades'], ['3_Diamonds', '2_Diamonds']],
-  // tableauCards: [['3_Diamonds', '2_Spades'], [], []],
-  // tableauCards: [['4_Spades'], ['3_Diamonds'], ['3_Diamonds']],
   moveHistories: [],
   freeCellCards: [null, null, null, null],
-  // freeCellCards: ['3_Diamonds', '3_Diamonds', '3_Diamonds', '3_Diamonds'],
   homeCellCards: [[], [], [], []],
-  // homeCellCards: [['2_Diamonds'], [], [], []],
   isDraggedCard: null,
   game: {
     points: 0,
@@ -92,7 +87,8 @@ const freecellReducer = (state = INITIAL_STATE, action) => {
     case FreecellTypes.END_GAME:
       return {
         ...state,
-        tableauCards: []
+        tableauCards: [],
+        freeCellCards: [null, null, null, null]
       }
     case FreecellTypes.TOGGLE_MENU:
       if (action.payload === 'close') {

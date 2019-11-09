@@ -157,7 +157,7 @@ export const backOneStep = state => {
  * 把在tableau中可以拖曳的卡片全部儲存進陣列
  * @param {Array} tableauCards
  */
-function getAllTableauDraggableCards(tableauCards) {
+function getAllTableauDraggableCards(tableauCards, freeCellCards) {
   let tableauDraggableCards = []
   for (let columnIndex = 0; columnIndex < tableauCards.length; columnIndex++) {
     if (tableauCards[columnIndex].length === 0) {
@@ -169,7 +169,7 @@ function getAllTableauDraggableCards(tableauCards) {
       index >= 0;
       index--
     ) {
-      if (isDraggable(tableauCards[columnIndex], index)) {
+      if (isDraggable(tableauCards, freeCellCards, columnIndex, index)) {
         const [point, suit] = tableauCards[columnIndex][index].split('_')
         tableauDraggableCards.push({
           columnIndex,
@@ -186,7 +186,7 @@ function getAllTableauDraggableCards(tableauCards) {
 
 /**
  * 擷取所有的free cell
- * @param {Array} freeCellCards 
+ * @param {Array} freeCellCards
  */
 function getAllFreeCellCards(freeCellCards) {
   return freeCellCards.map((card, freeCellIndex) => ({
@@ -197,7 +197,7 @@ function getAllFreeCellCards(freeCellCards) {
 
 /**
  * 擷取所有的 home cell
- * @param {Array} homeCellCards 
+ * @param {Array} homeCellCards
  */
 function getAllHomeCellCards(homeCellCards) {
   return homeCellCards.map((card, homeCellIndex) => {
@@ -210,24 +210,43 @@ function getAllHomeCellCards(homeCellCards) {
   })
 }
 
+/**
+ * 判斷 card 是不是在 tableau 中其中一行的最後一張卡片
+ *
+ * @param {Arrat} tableauCards
+ * @param {Object} card
+ */
+function isLastCardInTableauColumn(tableauCards, card) {
+  return tableauCards[card.columnIndex].length - 1 === card.index
+}
+
+/**
+ * 判斷 tableauCard 是否是一張空的卡
+ *
+ * @param {Object}} tableauCard
+ */
+function isEmptyCard(card) {
+  return typeof card.card === 'undefined' || card.card === null
+}
+
 export const getHint = state => {
   let tableauCards = [...state.tableauCards]
   let homeCellCards = [...state.homeCellCards]
   let freeCellCards = [...state.freeCellCards]
 
-  let tableauDraggableCards = shuffle(getAllTableauDraggableCards(tableauCards))
+  let tableauDraggableCards = shuffle(
+    getAllTableauDraggableCards(tableauCards, freeCellCards)
+  )
 
   freeCellCards = getAllFreeCellCards(freeCellCards)
 
   homeCellCards = getAllHomeCellCards(homeCellCards)
 
   let hint = []
-
   // 如果在home cell 中有可以放的位置優先處理
   for (let i = 0; i < tableauDraggableCards.length; i++) {
     const tableauCard = tableauDraggableCards[i]
-
-    if (typeof tableauCard.card === 'undefined') continue
+    if (isEmptyCard(tableauCard)) continue
     for (let j = 0; j < homeCellCards.length; j++) {
       const homeCellCard = homeCellCards[j]
       if (
@@ -237,8 +256,7 @@ export const getHint = state => {
             tableauCard.card.point,
             homeCellCard.card.point
           ) &&
-          tableauCard.index ===
-            tableauCards[tableauCard.columnIndex].length - 1)
+          isLastCardInTableauColumn(tableauCards, tableauCard))
       ) {
         hint = [
           {
@@ -258,20 +276,24 @@ export const getHint = state => {
   for (let i = 0; i < tableauDraggableCards.length - 1; i++) {
     const tableauCardA = tableauDraggableCards[i]
 
-    if (typeof tableauCardA.card === 'undefined') continue
+    if (isEmptyCard(tableauCardA)) continue
 
     for (let j = i + 1; j < tableauDraggableCards.length; j++) {
       const tableauCardB = tableauDraggableCards[j]
 
-      if (typeof tableauCardB.card === 'undefined') continue
+      if (isEmptyCard(tableauCardB)) continue
       if (
         isDifferentColorSuit(tableauCardA.card.suit, tableauCardB.card.suit) &&
-        ((tableauCardA.card.point - tableauCardB.card.point === 1 &&
-          tableauCardA.index ===
-            tableauCards[tableauCardA.columnIndex].length - 1) ||
-          (tableauCardB.card.point - tableauCardA.card.point === 1 &&
-            tableauCardB.index ===
-              tableauCards[tableauCardB.columnIndex].length - 1)) &&
+        ((substractEqualToOne(
+          tableauCardA.card.point,
+          tableauCardB.card.point
+        ) &&
+          isLastCardInTableauColumn(tableauCards, tableauCardA)) ||
+          (substractEqualToOne(
+            tableauCardB.card.point,
+            tableauCardA.card.point
+          ) &&
+            isLastCardInTableauColumn(tableauCards, tableauCardB))) &&
         tableauCardA.columnIndex !== tableauCardB.columnIndex
       ) {
         hint = [
@@ -296,10 +318,12 @@ export const getHint = state => {
     const tableauCard = tableauDraggableCards[i]
     for (let j = 0; j < freeCellCards.length; j++) {
       const freeCellCard = freeCellCards[j]
+      console.log(tableauCard, freeCellCard)
       if (
-        (typeof tableauCard.card === 'undefined' &&
-          freeCellCard.card !== null) ||
-        (typeof tableauCard.card !== 'undefined' && freeCellCard.card === null)
+        (isEmptyCard(tableauCard) && !isEmptyCard(freeCellCard)) ||
+        (!isEmptyCard(tableauCard) &&
+          isEmptyCard(freeCellCard) &&
+          isLastCardInTableauColumn(tableauCards, tableauCard))
       ) {
         hint = [
           {
@@ -311,8 +335,8 @@ export const getHint = state => {
           }
         ]
         return hint
-      }
-      if (
+      } else if (
+        isLastCardInTableauColumn(tableauCards, tableauCard) &&
         isDifferentColorSuit(tableauCard.card.suit, freeCellCard.card.suit) &&
         substractEqualToOne(tableauCard.card.point, freeCellCard.card.point)
       ) {
@@ -336,10 +360,8 @@ export const getHint = state => {
     for (let j = i + 1; j < tableauDraggableCards.length; j++) {
       const tableauCardB = tableauDraggableCards[j]
       if (
-        (typeof tableauCardA.card === 'undefined' &&
-          typeof tableauCardB.card !== 'undefined') ||
-        (typeof tableauCardA.card !== 'undefined' &&
-          typeof tableauCardB.card === 'undefined')
+        (isEmptyCard(tableauCardA) && !isEmptyCard(tableauCardB)) ||
+        (!isEmptyCard(tableauCardA) && isEmptyCard(tableauCardB))
       ) {
         hint = [
           {

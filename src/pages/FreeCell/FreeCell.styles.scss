@@ -87,23 +87,25 @@ $logo-color: #ffac4e;
     justify-content: center;
   }
 
-  .free-cell__hint {
-    z-index: 99999;
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    button {
-      @include button;
+  .free-cell__game-btn {
+    .free-cell__hint {
+      z-index: 99999;
+      position: fixed;
+      left: 0;
+      bottom: 0;
+      button {
+        @include button;
+      }
     }
-  }
 
-  .free-cell__back {
-    z-index: 99999;
-    position: absolute;
-    right: 0;
-    bottom: 0;
-    button {
-      @include button;
+    .free-cell__back {
+      z-index: 99999;
+      position: fixed;
+      right: 0;
+      bottom: 0;
+      button {
+        @include button;
+      }
     }
   }
 }

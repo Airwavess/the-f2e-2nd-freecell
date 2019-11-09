@@ -3,12 +3,11 @@ import { useSelector, useDispatch } from 'react-redux'
 import Diamond from '../../assets/img/Diamond.svg'
 import './Header.styles.scss'
 import { updateTimer } from '../../redux/freecell/freecell.action'
+import { endGameSelector } from '../../redux/freecell/freecell.selectors'
 import { getTime } from '../../utils/utils'
 
 const Header = () => {
-  const isEndGame = useSelector(
-    state => state.freecell.tableauCards.length === 0
-  )
+  const isEndGame = useSelector(endGameSelector)
   const gamePoints = useSelector(state => state.freecell.game.points)
   const gameTime = useSelector(state => state.freecell.game.time)
   const dispatch = useDispatch()

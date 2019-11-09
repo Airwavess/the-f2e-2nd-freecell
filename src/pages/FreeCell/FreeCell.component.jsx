@@ -8,7 +8,11 @@ import './FreeCell.styles.scss'
 import Header from '../../components/Header/Header.component'
 import GameBoard from '../../components/GameBoard/GameBoard.component'
 import Menu from '../../components/Menu/Menu.component'
-import { toggleMenu, backOneStep, getHint } from '../../redux/freecell/freecell.action'
+import {
+  toggleMenu,
+  backOneStep,
+  getHint
+} from '../../redux/freecell/freecell.action'
 import { endGameSelector } from '../../redux/freecell/freecell.selectors'
 
 const FreeCell = () => {
@@ -52,15 +56,17 @@ const FreeCell = () => {
         <DndProvider backend={HTML5Backend}>
           <GameBoard />
         </DndProvider>
-        <div className='free-cell__hint' onClick={handleGetHint}>
-          <button>
-            <img src={Hint} alt='hint button' />
-          </button>
-        </div>
-        <div className='free-cell__back' onClick={handleBackOneStep}>
-          <button>
-            <img src={Back} alt='back button' />
-          </button>
+        <div className='free-cell__game-btn'>
+          <div className='free-cell__hint' onClick={handleGetHint}>
+            <button>
+              <img src={Hint} alt='hint button' />
+            </button>
+          </div>
+          <div className='free-cell__back' onClick={handleBackOneStep}>
+            <button>
+              <img src={Back} alt='back button' />
+            </button>
+          </div>
         </div>
       </div>
     </div>

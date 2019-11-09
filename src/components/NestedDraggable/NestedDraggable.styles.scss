@@ -2,6 +2,7 @@ $basic-color: #ffac4e;
 
 .nested-draggable {
   position: absolute;
+  transition: top 0.5s;
 
   &.nested-draggable--hint {
     border: 2px solid $basic-color;
